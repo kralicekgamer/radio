@@ -2,7 +2,8 @@ let playlist = [];
 let currentTrackIndex = 0;
 let isPlaying = false;
 let isShuffled = false;
-let shuffledPlaylist = [];
+let shuffledIndices = []; // Array indexů pro zamíchaný playlist
+let shufflePosition = 0; // Aktuální pozice v zamíchaném playlistu
 let player;
 let isPlayerReady = false;
 
@@ -43,10 +44,10 @@ function onPlayerStateChange(event) {
         nextTrack();
     } else if (event.data == YT.PlayerState.PLAYING) {
         isPlaying = true;
-        document.getElementById('playPauseBtn').textContent = '⏸️ Pauza';
+        document.getElementById('playPauseBtn').innerHTML = '<i class="fa-solid fa-pause"></i>';
     } else if (event.data == YT.PlayerState.PAUSED) {
         isPlaying = false;
-        document.getElementById('playPauseBtn').textContent = '▶️ Přehrát';
+        document.getElementById('playPauseBtn').innerHTML = '<i class="fa-solid fa-play"></i>';
     }
 }
 
@@ -70,7 +71,7 @@ async function loadPlaylist() {
 
         if (data && data.playlist && Array.isArray(data.playlist)) {
             playlist = data.playlist;
-            shuffledPlaylist = [...playlist];
+            initializeShuffleIndices();
             console.log(`Načteno ${playlist.length} skladeb`);
 
             if (playlist.length > 0) {
@@ -81,6 +82,23 @@ async function loadPlaylist() {
         }
     } catch (error) {
         console.error('Chyba při načítání playlistu:', error);
+    }
+}
+
+// Funkce pro inicializaci indexů pro shuffle
+function initializeShuffleIndices() {
+    shuffledIndices = [];
+    for (let i = 0; i < playlist.length; i++) {
+        shuffledIndices.push(i);
+    }
+    shufflePosition = 0;
+}
+
+// Funkce pro zamíchání indexů (Fisher-Yates shuffle)
+function shuffleIndices() {
+    for (let i = shuffledIndices.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffledIndices[i], shuffledIndices[j]] = [shuffledIndices[j], shuffledIndices[i]];
     }
 }
 
@@ -101,12 +119,18 @@ function setupVolumeControl() {
 
 // Funkce pro přehrání konkrétní skladby
 function playTrack(index) {
-    if (index >= 0 && index < getCurrentPlaylist().length) {
+    if (index >= 0 && index < playlist.length) {
         currentTrackIndex = index;
+        
+        // Pokud je shuffle zapnutý, najdi pozici v shuffled playlistu
+        if (isShuffled) {
+            shufflePosition = shuffledIndices.indexOf(index);
+        }
+        
         updateTrackInfo();
 
         if (isPlayerReady) {
-            const currentTrack = getCurrentPlaylist()[currentTrackIndex];
+            const currentTrack = playlist[currentTrackIndex];
             const videoId = extractVideoId(currentTrack.url);
 
             if (videoId) {
@@ -123,18 +147,19 @@ function playTrack(index) {
 
 // Funkce pro aktualizaci informací o skladbě
 function updateTrackInfo() {
-    const currentTrack = getCurrentPlaylist()[currentTrackIndex];
+    const currentTrack = playlist[currentTrackIndex];
     if (currentTrack) {
         document.getElementById('songTitle').textContent = currentTrack.title;
         document.getElementById('channelName').textContent = currentTrack.channel;
-        document.getElementById('trackInfo').textContent =
-            `${currentTrackIndex + 1} / ${getCurrentPlaylist().length}`;
+        
+        if (isShuffled) {
+            document.getElementById('trackInfo').textContent = 
+                `${shufflePosition + 1} / ${playlist.length} (Shuffle)`;
+        } else {
+            document.getElementById('trackInfo').textContent = 
+                `${currentTrackIndex + 1} / ${playlist.length}`;
+        }
     }
-}
-
-// Funkce pro získání aktuálního playlistu
-function getCurrentPlaylist() {
-    return isShuffled ? shuffledPlaylist : playlist;
 }
 
 // Funkce pro extrakci ID videa z YouTube URL
@@ -161,19 +186,37 @@ function togglePlayPause() {
 }
 
 function nextTrack() {
-    const currentPlaylist = getCurrentPlaylist();
-    if (currentPlaylist.length === 0) return;
+    if (playlist.length === 0) return;
 
-    currentTrackIndex = (currentTrackIndex + 1) % currentPlaylist.length;
+    if (isShuffled) {
+        shufflePosition = (shufflePosition + 1) % shuffledIndices.length;
+        
+        // Pokud jsme prošli celý zamíchaný playlist, zamíchej znovu
+        if (shufflePosition === 0) {
+            shuffleIndices();
+            console.log('Nový cyklus - playlist znovu zamíchán');
+        }
+        
+        currentTrackIndex = shuffledIndices[shufflePosition];
+    } else {
+        currentTrackIndex = (currentTrackIndex + 1) % playlist.length;
+    }
+    
     playTrack(currentTrackIndex);
 }
 
 function previousTrack() {
-    const currentPlaylist = getCurrentPlaylist();
-    if (currentPlaylist.length === 0) return;
+    if (playlist.length === 0) return;
 
-    currentTrackIndex = currentTrackIndex === 0 ?
-        currentPlaylist.length - 1 : currentTrackIndex - 1;
+    if (isShuffled) {
+        shufflePosition = shufflePosition === 0 ? 
+            shuffledIndices.length - 1 : shufflePosition - 1;
+        currentTrackIndex = shuffledIndices[shufflePosition];
+    } else {
+        currentTrackIndex = currentTrackIndex === 0 ? 
+            playlist.length - 1 : currentTrackIndex - 1;
+    }
+    
     playTrack(currentTrackIndex);
 }
 
@@ -182,30 +225,23 @@ function toggleShuffle() {
     const shuffleBtn = document.getElementById('shuffleBtn');
 
     if (isShuffled) {
-        // Zamíchat playlist
-        shuffledPlaylist = [...playlist];
-        for (let i = shuffledPlaylist.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [shuffledPlaylist[i], shuffledPlaylist[j]] = [shuffledPlaylist[j], shuffledPlaylist[i]];
-        }
+        // Zapnout shuffle
+        shuffleIndices();
+        
+        // Najít aktuální skladbu v zamíchaném seznamu
+        shufflePosition = shuffledIndices.indexOf(currentTrackIndex);
+        
         shuffleBtn.textContent = '🔀 Shuffle ON';
         shuffleBtn.style.background = 'rgba(0, 255, 0, 0.3)';
-
-        // Najít aktuální skladbu v zamíchaném playlistu
-        const currentTrack = playlist[currentTrackIndex];
-        currentTrackIndex = shuffledPlaylist.findIndex(track =>
-            track.url === currentTrack.url);
-
-        console.log('Shuffle zapnut');
+        
+        console.log('Shuffle zapnut - vytvořen unikátní zamíchaný playlist');
+        console.log('Shuffle pořadí:', shuffledIndices);
     } else {
-        // Vrátit původní playlist
-        const currentTrack = shuffledPlaylist[currentTrackIndex];
-        currentTrackIndex = playlist.findIndex(track =>
-            track.url === currentTrack.url);
+        // Vypnout shuffle
         shuffleBtn.textContent = '🔀 Shuffle';
         shuffleBtn.style.background = 'rgba(255, 255, 255, 0.2)';
-
-        console.log('Shuffle vypnut');
+        
+        console.log('Shuffle vypnut - návrat k původnímu pořadí');
     }
 
     updateTrackInfo();

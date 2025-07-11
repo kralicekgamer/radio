@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>YouTube Radio</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 </head>
 <body>
     <div class="radio-container">
@@ -17,15 +19,15 @@
         </div>
 
         <div class="volume-container">
-            <span class="volume-label">🔊 Hlasitost: <span id="volumeValue">50</span>%</span>
+            <span class="volume-label"><i class="fa-solid fa-volume-high"></i> Volume: <span id="volumeValue">50</span>%</span>
             <input type="range" class="volume-slider" id="volumeSlider" min="0" max="100" value="50">
         </div>
 
         <div class="controls">
-            <button class="btn" id="prevBtn" onclick="previousTrack()">⏮️ Předchozí</button>
-            <button class="btn" id="playPauseBtn" onclick="togglePlayPause()">▶️ Přehrát</button>
-            <button class="btn" id="nextBtn" onclick="nextTrack()">⏭️ Další</button>
-            <button class="btn" id="shuffleBtn" onclick="toggleShuffle()">🔀 Shuffle</button>
+            <button class="btn" id="prevBtn" onclick="previousTrack()"><i class="fa-solid fa-backward"></i></button>
+            <button class="btn" id="playPauseBtn" onclick="togglePlayPause()"><i class="fa-solid fa-play"></i></button>
+            <button class="btn" id="nextBtn" onclick="nextTrack()"><i class="fa-solid fa-forward"></i></button>
+            <button class="btn" id="shuffleBtn" onclick="toggleShuffle()"><i class="fa-solid fa-shuffle"></i></button>
         </div>
 
         <div class="status" id="status">Načítání playlistu...</div>
