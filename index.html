@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Web Radio</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .radio-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            max-width: 600px;
+            width: 100%;
+        }
+
+        .radio-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .radio-title {
+            color: white;
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .current-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+            color: white;
+        }
+
+        .track-title {
+            font-size: 1.4em;
+            font-weight: bold;
+            margin-bottom: 8px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .track-channel {
+            font-size: 1.1em;
+            opacity: 0.9;
+            margin-bottom: 15px;
+        }
+
+        .track-progress {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 15px;
+            font-size: 0.9em;
+        }
+
+        .progress-bar {
+            flex: 1;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+            margin: 0 15px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff6b6b, #ffd93d);
+            border-radius: 3px;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .control-btn {
+            background: rgba(255, 255, 255, 0.15);
+            border: none;
+            border-radius: 50px;
+            color: white;
+            font-size: 1.2em;
+            padding: 15px 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .control-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .control-btn:active {
+            transform: translateY(0);
+        }
+
+        .control-btn.play-pause {
+            background: linear-gradient(45deg, #ff6b6b, #ffd93d);
+            font-size: 1.5em;
+            padding: 18px 25px;
+        }
+
+        .playlist-upload {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .file-input {
+            margin-bottom: 15px;
+        }
+
+        .file-input input[type="file"] {
+            display: none;
+        }
+
+        .file-input label {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .file-input label:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .playlist-info {
+            color: white;
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+
+        .status {
+            text-align: center;
+            color: white;
+            font-size: 1.1em;
+            margin-top: 20px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .volume-control {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+            color: white;
+        }
+
+        .volume-slider {
+            width: 120px;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            background: linear-gradient(45deg, #ff6b6b, #ffd93d);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        #player {
+            width: 100%;
+            height: 1px;
+            opacity: 0;
+            pointer-events: none;
+            position: absolute;
+            top: -1000px;
+        }
+    </style>
+</head>
+<body>
+    <div class="radio-container">
+        <div class="radio-header">
+            <h1 class="radio-title">🎵 YouTube Radio</h1>
+        </div>
+
+        <div class="playlist-info">
+            <div style="text-align: center; color: white; font-size: 1.1em; margin-bottom: 20px;">
+                🎵 Načítám playlist ze serveru...
+            </div>
+        </div>
+
+        <div id="player" class="hidden"></div>
+
+        <div class="current-track" id="current-track">
+            <div class="track-title">Načítám playlist...</div>
+            <div class="track-channel">Čekám na data ze serveru</div>
+            <div class="track-progress">
+                <span id="current-time">0:00</span>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill"></div>
+                </div>
+                <span id="duration">0:00</span>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="control-btn" id="prev-btn">⏮️</button>
+            <button class="control-btn play-pause" id="play-pause-btn">▶️</button>
+            <button class="control-btn" id="next-btn">⏭️</button>
+            <button class="control-btn" id="shuffle-btn">🔀</button>
+        </div>
+
+        <div class="volume-control">
+            <span>🔊</span>
+            <input type="range" class="volume-slider" id="volume-slider" min="0" max="100" value="50">
+            <span id="volume-value">50%</span>
+        </div>
+
+        <div class="status" id="status">Připravuji načtení playlistu...</div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js"></script>
+    <script>
+        class YouTubeRadio {
+            constructor() {
+                this.playlist = [];
+                this.currentIndex = 0;
+                this.isPlaying = false;
+                this.isShuffled = false;
+                this.shuffledPlaylist = [];
+                this.player = null;
+                this.progressTimer = null;
+                
+                this.initializeElements();
+                this.bindEvents();
+                this.loadYouTubeAPI();
+                this.loadPlaylistFromServer();
+            }
+
+            initializeElements() {
+                this.playPauseBtn = document.getElementById('play-pause-btn');
+                this.prevBtn = document.getElementById('prev-btn');
+                this.nextBtn = document.getElementById('next-btn');
+                this.shuffleBtn = document.getElementById('shuffle-btn');
+                this.volumeSlider = document.getElementById('volume-slider');
+                this.volumeValue = document.getElementById('volume-value');
+                this.currentTrackDiv = document.getElementById('current-track');
+                this.statusDiv = document.getElementById('status');
+                this.progressFill = document.getElementById('progress-fill');
+                this.currentTimeSpan = document.getElementById('current-time');
+                this.durationSpan = document.getElementById('duration');
+                this.playerDiv = document.getElementById('player');
+            }
+
+            bindEvents() {
+                this.playPauseBtn.addEventListener('click', () => this.togglePlayPause());
+                this.prevBtn.addEventListener('click', () => this.previousTrack());
+                this.nextBtn.addEventListener('click', () => this.nextTrack());
+                this.shuffleBtn.addEventListener('click', () => this.toggleShuffle());
+                this.volumeSlider.addEventListener('input', (e) => this.setVolume(e.target.value));
+            }
+
+            loadYouTubeAPI() {
+                const tag = document.createElement('script');
+                tag.src = 'https://www.youtube.com/iframe_api';
+                const firstScriptTag = document.getElementsByTagName('script')[0];
+                firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+                
+                window.onYouTubeIframeAPIReady = () => {
+                    this.initializePlayer();
+                };
+            }
+
+            initializePlayer() {
+                this.player = new YT.Player('player', {
+                    height: '1',
+                    width: '1',
+                    playerVars: {
+                        'autoplay': 0,
+                        'controls': 0,
+                        'showinfo': 0,
+                        'rel': 0,
+                        'fs': 0,
+                        'cc_load_policy': 0,
+                        'iv_load_policy': 3,
+                        'modestbranding': 1
+                    },
+                    events: {
+                        'onReady': (event) => this.onPlayerReady(event),
+                        'onStateChange': (event) => this.onPlayerStateChange(event)
+                    }
+                });
+            }
+
+            onPlayerReady(event) {
+                this.setVolume(50);
+                this.updateStatus('YouTube přehrávač připraven');
+            }
+
+            onPlayerStateChange(event) {
+                if (event.data === YT.PlayerState.ENDED) {
+                    this.nextTrack();
+                } else if (event.data === YT.PlayerState.PLAYING) {
+                    this.isPlaying = true;
+                    this.playPauseBtn.textContent = '⏸️';
+                    this.startProgressTimer();
+                } else if (event.data === YT.PlayerState.PAUSED) {
+                    this.isPlaying = false;
+                    this.playPauseBtn.textContent = '▶️';
+                    this.stopProgressTimer();
+                }
+            }
+
+            async loadPlaylistFromServer() {
+                try {
+                    this.updateStatus('Načítám playlist ze serveru...');
+                    
+                    // Zkusí načíst music.yaml
+                    let response = await fetch('./music.yaml');
+                    let text = await response.text();
+                    let playlist;
+                    
+                    if (response.ok) {
+                        playlist = jsyaml.load(text);
+                    } else {
+                        // Pokud yaml neexistuje, zkusí music.json
+                        response = await fetch('./music.json');
+                        if (response.ok) {
+                            text = await response.text();
+                            playlist = JSON.parse(text);
+                        } else {
+                            throw new Error('Playlist soubor nebyl nalezen (music.yaml nebo music.json)');
+                        }
+                    }
+
+                    this.playlist = playlist;
+                    this.validatePlaylist();
+                    this.currentIndex = 0;
+                    this.updateCurrentTrack();
+                    this.updateStatus(`Playlist načten: ${this.playlist.length} skladeb`);
+                    // Neodstraňujeme hidden class, protože nechceme zobrazovat video player
+                    
+                } catch (error) {
+                    this.updateStatus(`Chyba při načítání playlistu: ${error.message}`);
+                    console.error('Chyba při načítání playlistu:', error);
+                }
+            }
+
+            async handleFileUpload(event) {
+                const file = event.target.files[0];
+                if (!file) return;
+
+                try {
+                    const text = await this.readFile(file);
+                    const extension = file.name.split('.').pop().toLowerCase();
+                    
+                    if (extension === 'json') {
+                        this.playlist = JSON.parse(text);
+                    } else if (extension === 'yaml' || extension === 'yml') {
+                        this.playlist = jsyaml.load(text);
+                    } else {
+                        throw new Error('Nepodporovaný formát souboru');
+                    }
+
+                    this.validatePlaylist();
+                    this.currentIndex = 0;
+                    this.updateCurrentTrack();
+                    this.updateStatus(`Playlist nahrán: ${this.playlist.length} skladeb`);
+                    this.playerDiv.classList.remove('hidden');
+                    
+                } catch (error) {
+                    this.updateStatus(`Chyba při načítání playlistu: ${error.message}`);
+                    console.error('Chyba při načítání playlistu:', error);
+                }
+            }
+
+            validatePlaylist() {
+                if (!Array.isArray(this.playlist)) {
+                    throw new Error('Playlist musí být pole objektů');
+                }
+
+                this.playlist.forEach((track, index) => {
+                    if (!track.title || !track.channel || !track.url) {
+                        throw new Error(`Skladba ${index + 1} nemá všechny požadované údaje (title, channel, url)`);
+                    }
+                });
+            }
+
+            extractVideoId(url) {
+                const regex = /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\n?#]+)/;
+                const match = url.match(regex);
+                return match ? match[1] : null;
+            }
+
+            getCurrentPlaylist() {
+                return this.isShuffled ? this.shuffledPlaylist : this.playlist;
+            }
+
+            updateCurrentTrack() {
+                if (this.playlist.length === 0) return;
+
+                const currentPlaylist = this.getCurrentPlaylist();
+                const track = currentPlaylist[this.currentIndex];
+                
+                document.querySelector('.track-title').textContent = track.title;
+                document.querySelector('.track-channel').textContent = track.channel;
+                
+                if (this.player && this.player.loadVideoById) {
+                    const videoId = this.extractVideoId(track.url);
+                    if (videoId) {
+                        this.player.loadVideoById(videoId);
+                    }
+                }
+            }
+
+            togglePlayPause() {
+                if (!this.player || this.playlist.length === 0) return;
+
+                if (this.isPlaying) {
+                    this.player.pauseVideo();
+                } else {
+                    this.player.playVideo();
+                }
+            }
+
+            previousTrack() {
+                if (this.playlist.length === 0) return;
+
+                const currentPlaylist = this.getCurrentPlaylist();
+                this.currentIndex = (this.currentIndex - 1 + currentPlaylist.length) % currentPlaylist.length;
+                this.updateCurrentTrack();
+            }
+
+            nextTrack() {
+                if (this.playlist.length === 0) return;
+
+                const currentPlaylist = this.getCurrentPlaylist();
+                this.currentIndex = (this.currentIndex + 1) % currentPlaylist.length;
+                this.updateCurrentTrack();
+            }
+
+            toggleShuffle() {
+                this.isShuffled = !this.isShuffled;
+                this.shuffleBtn.style.background = this.isShuffled ? 
+                    'linear-gradient(45deg, #ff6b6b, #ffd93d)' : 
+                    'rgba(255, 255, 255, 0.15)';
+
+                if (this.isShuffled) {
+                    this.shuffledPlaylist = [...this.playlist].sort(() => Math.random() - 0.5);
+                    this.currentIndex = 0;
+                    this.updateCurrentTrack();
+                } else {
+                    const currentTrack = this.getCurrentPlaylist()[this.currentIndex];
+                    this.currentIndex = this.playlist.findIndex(track => track.url === currentTrack.url);
+                }
+            }
+
+            setVolume(volume) {
+                if (this.player && this.player.setVolume) {
+                    this.player.setVolume(volume);
+                }
+                this.volumeValue.textContent = volume + '%';
+            }
+
+            startProgressTimer() {
+                this.stopProgressTimer();
+                this.progressTimer = setInterval(() => {
+                    if (this.player && this.player.getCurrentTime && this.player.getDuration) {
+                        const currentTime = this.player.getCurrentTime();
+                        const duration = this.player.getDuration();
+                        
+                        if (duration > 0) {
+                            const progress = (currentTime / duration) * 100;
+                            this.progressFill.style.width = progress + '%';
+                            this.currentTimeSpan.textContent = this.formatTime(currentTime);
+                            this.durationSpan.textContent = this.formatTime(duration);
+                        }
+                    }
+                }, 1000);
+            }
+
+            stopProgressTimer() {
+                if (this.progressTimer) {
+                    clearInterval(this.progressTimer);
+                    this.progressTimer = null;
+                }
+            }
+
+            formatTime(seconds) {
+                const mins = Math.floor(seconds / 60);
+                const secs = Math.floor(seconds % 60);
+                return `${mins}:${secs.toString().padStart(2, '0')}`;
+            }
+
+            updateStatus(message) {
+                this.statusDiv.textContent = message;
+            }
+        }
+
+        // Inicializace aplikace
+        const radio = new YouTubeRadio();
+    </script>
+</body>
+</html>
