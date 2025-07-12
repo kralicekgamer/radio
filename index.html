@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HardStyle Radio</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 </head>
 <body>
@@ -15,7 +14,6 @@
         <div class="player-info">
             <div class="song-title" id="songTitle">Načítání...</div>
             <div class="channel-name" id="channelName">-</div>
-            <div class="track-info" id="trackInfo">-</div>
         </div>
 
         <div class="volume-container">
@@ -29,12 +27,9 @@
             <button class="btn" id="nextBtn" onclick="nextTrack()"><i class="fa-solid fa-forward"></i></button>
             <button class="btn" id="shuffleBtn" onclick="toggleShuffle()"><i class="fa-solid fa-shuffle"></i></button>
         </div>
-
-        <div class="status" id="status">Načítání playlistu...</div>
         
         <div id="youtube-player"></div>
     </div>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js"></script>
     <script src="script.js"></script>
 </body>

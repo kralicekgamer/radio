@@ -151,14 +151,6 @@ function updateTrackInfo() {
     if (currentTrack) {
         document.getElementById('songTitle').textContent = currentTrack.title;
         document.getElementById('channelName').textContent = currentTrack.channel;
-        
-        if (isShuffled) {
-            document.getElementById('trackInfo').textContent = 
-                `${shufflePosition + 1} / ${playlist.length} (Shuffle)`;
-        } else {
-            document.getElementById('trackInfo').textContent = 
-                `${currentTrackIndex + 1} / ${playlist.length}`;
-        }
     }
 }
 
