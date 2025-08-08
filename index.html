@@ -3,33 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HardStyle Radio</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Hardstyle Radio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="radio-container">
         <h1>Hardstyle Radio</h1>
         
-        <div class="player-info">
-            <div class="song-title" id="songTitle">Načítání...</div>
-            <div class="channel-name" id="channelName">-</div>
+        <div class="player-section">
+            <div class="player-info">
+                <div class="song-title" id="songTitle">Načítání...</div>
+                <div class="channel-name" id="channelName">-</div>
+            </div>
         </div>
 
-        <div class="volume-container">
-            <span class="volume-label"><i class="fa-solid fa-volume-high"></i> Volume: <span id="volumeValue">50</span>%</span>
-            <input type="range" class="volume-slider" id="volumeSlider" min="0" max="100" value="50"> 
+        <div class="volume-section">
+            <div class="volume-label">
+                <span>Hlasitost</span>
+                <span class="volume-value" id="volumeValue">50%</span>
+            </div>
+            <div class="volume-controls">
+                <i class="fa-solid fa-volume-low volume-icon"></i>
+                <input type="range" class="volume-slider" id="volumeSlider" min="0" max="100" value="50" aria-label="Nastavení hlasitosti">
+                <i class="fa-solid fa-volume-high volume-icon"></i>
+            </div>
         </div>
 
         <div class="controls">
-            <button class="btn" id="prevBtn" onclick="previousTrack()"><i class="fa-solid fa-backward"></i></button>
-            <button class="btn" id="playPauseBtn" onclick="togglePlayPause()"><i class="fa-solid fa-play"></i></button>
-            <button class="btn" id="nextBtn" onclick="nextTrack()"><i class="fa-solid fa-forward"></i></button>
-            <button class="btn" id="shuffleBtn" onclick="toggleShuffle()"><i class="fa-solid fa-shuffle"></i></button>
+            <button class="btn" id="prevBtn" onclick="previousTrack()" aria-label="Předchozí skladba">
+                <i class="fa-solid fa-backward"></i>
+            </button>
+            <button class="btn" id="playPauseBtn" onclick="togglePlayPause()" aria-label="Přehrát/Pozastavit">
+                <i class="fa-solid fa-play"></i>
+            </button>
+            <button class="btn" id="nextBtn" onclick="nextTrack()" aria-label="Další skladba">
+                <i class="fa-solid fa-forward"></i>
+            </button>
+            <button class="btn" id="shuffleBtn" onclick="toggleShuffle()" aria-label="Náhodné přehrávání">
+                <i class="fa-solid fa-shuffle"></i>
+            </button>
         </div>
         
+        <div class="status" id="status"></div>
         <div id="youtube-player"></div>
     </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js"></script>
     <script src="script.js"></script>
 </body>

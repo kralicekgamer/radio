@@ -38,20 +38,13 @@ const Logger = {
         muted: '#7f8c8d'
     },
 
-    /**
-     * Display app header with ASCII art
-     */
     displayHeader() {
         console.clear();
-
-        this.info('🚀 Application is starting...'); // Original: '🚀 Aplikace se spouští...'
-        this.info('📱 This is the developer console - you will see all system messages here'); // Original: '📱 Toto je konzole pro vývojáře - zde uvidíte všechny systémové zprávy'
+        this.info('🚀 Application is starting...');
+        this.info('📱 This is the developer console - you will see all system messages here');
         this.separator();
     },
 
-    /**
-     * Log success message
-     */
     success(message, data = null) {
         const timestamp = new Date().toLocaleTimeString();
         console.log(`%c[${timestamp}] ✅ ${message}`, `color: ${this.colors.success}; font-weight: bold`);
@@ -60,9 +53,6 @@ const Logger = {
         }
     },
 
-    /**
-     * Log info message
-     */
     info(message, data = null) {
         const timestamp = new Date().toLocaleTimeString();
         console.log(`%c[${timestamp}] ℹ️  ${message}`, `color: ${this.colors.info}; font-weight: bold`);
@@ -71,9 +61,6 @@ const Logger = {
         }
     },
 
-    /**
-     * Log warning message
-     */
     warning(message, data = null) {
         const timestamp = new Date().toLocaleTimeString();
         console.log(`%c[${timestamp}] ⚠️  ${message}`, `color: ${this.colors.warning}; font-weight: bold`);
@@ -82,9 +69,6 @@ const Logger = {
         }
     },
 
-    /**
-     * Log error message
-     */
     error(message, data = null) {
         const timestamp = new Date().toLocaleTimeString();
         console.log(`%c[${timestamp}] ❌ ${message}`, `color: ${this.colors.error}; font-weight: bold`);
@@ -93,31 +77,22 @@ const Logger = {
         }
     },
 
-    /**
-     * Log track information
-     */
     track(action, track) {
         const timestamp = new Date().toLocaleTimeString();
         console.log(`%c[${timestamp}] 🎵 ${action}`, `color: ${this.colors.primary}; font-weight: bold`);
-        console.log(`%c├─ Title: ${track.title}`, `color: ${this.colors.muted}`); // Original: '├─ Název: ${track.title}'
-        console.log(`%c├─ Channel: ${track.channel}`, `color: ${this.colors.muted}`); // Original: '├─ Kanál: ${track.channel}'
+        console.log(`%c├─ Title: ${track.title}`, `color: ${this.colors.muted}`);
+        console.log(`%c├─ Channel: ${track.channel}`, `color: ${this.colors.muted}`);
         console.log(`%c└─ URL: ${track.url}`, `color: ${this.colors.muted}`);
     },
 
-    /**
-     * Log playlist information
-     */
     playlist(action, count, details = null) {
         const timestamp = new Date().toLocaleTimeString();
-        console.log(`%c[${timestamp}] 📋 ${action} (${count} tracks)`, `color: ${this.colors.primary}; font-weight: bold`); // Original: 'Playlist načten (${count} skladeb)'
+        console.log(`%c[${timestamp}] 📋 ${action} (${count} tracks)`, `color: ${this.colors.primary}; font-weight: bold`);
         if (details) {
             console.log(`%c└─ Detail:`, `color: ${this.colors.muted}`, details);
         }
     },
 
-    /**
-     * Log player state changes
-     */
     playerState(state, details = null) {
         const timestamp = new Date().toLocaleTimeString();
         const stateEmojis = {
@@ -137,37 +112,28 @@ const Logger = {
         }
     },
 
-    /**
-     * Log shuffle information
-     */
     shuffle(enabled, order = null) {
         const timestamp = new Date().toLocaleTimeString();
-        const status = enabled ? 'ON' : 'OFF'; // Original: 'ZAPNUTO' : 'VYPNUTO'
+        const status = enabled ? 'ON' : 'OFF';
         const emoji = enabled ? '🔀' : '📋';
         console.log(`%c[${timestamp}] ${emoji} Shuffle: ${status}`, `color: ${this.colors.primary}; font-weight: bold`);
         if (order && enabled) {
-            console.log(`%c└─ New order:`, `color: ${this.colors.muted}`, order); // Original: '└─ Nové pořadí:'
+            console.log(`%c└─ New order:`, `color: ${this.colors.muted}`, order);
         }
     },
 
-    /**
-     * Display separator
-     */
     separator() {
         console.log('%c' + '─'.repeat(120), `color: ${this.colors.muted}`);
     },
 
-    /**
-     * Display current status
-     */
     status() {
         this.separator();
-        console.log(`%c📊 CURRENT PLAYER STATUS`, `color: ${this.colors.primary}; font-weight: bold; font-size: 14px`); // Original: '📊 AKTUÁLNÍ STAV PŘEHRÁVAČE'
-        console.log(`%c├─ Playlist: ${playerState.playlist.length} tracks`, `color: ${this.colors.muted}`); // Original: '├─ Playlist: ${playerState.playlist.length} skladeb'
-        console.log(`%c├─ Current index: ${playerState.currentTrackIndex + 1}/${playerState.playlist.length}`, `color: ${this.colors.muted}`); // Original: '├─ Aktuální index: ${playerState.currentTrackIndex + 1}/${playerState.playlist.length}'
-        console.log(`%c├─ Playing: ${playerState.isPlaying ? 'YES' : 'NO'}`, `color: ${this.colors.muted}`); // Original: '├─ Přehrává: ${playerState.isPlaying ? 'ANO' : 'NE'}'
-        console.log(`%c├─ Shuffle: ${playerState.isShuffled ? 'ON' : 'OFF'}`, `color: ${this.colors.muted}`); // Original: '├─ Shuffle: ${playerState.isShuffled ? 'ZAPNUTO' : 'VYPNUTO'}'
-        console.log(`%c└─ API connected: ${playerState.isPlayerReady ? 'YES' : 'NO'}`, `color: ${this.colors.muted}`); // Original: '└─ API připojeno: ${playerState.isPlayerReady ? 'ANO' : 'NE'}'
+        console.log(`%c📊 CURRENT PLAYER STATUS`, `color: ${this.colors.primary}; font-weight: bold; font-size: 14px`);
+        console.log(`%c├─ Playlist: ${playerState.playlist.length} tracks`, `color: ${this.colors.muted}`);
+        console.log(`%c├─ Current index: ${playerState.currentTrackIndex + 1}/${playerState.playlist.length}`, `color: ${this.colors.muted}`);
+        console.log(`%c├─ Playing: ${playerState.isPlaying ? 'YES' : 'NO'}`, `color: ${this.colors.muted}`);
+        console.log(`%c├─ Shuffle: ${playerState.isShuffled ? 'ON' : 'OFF'}`, `color: ${this.colors.muted}`);
+        console.log(`%c└─ API connected: ${playerState.isPlayerReady ? 'YES' : 'NO'}`, `color: ${this.colors.muted}`);
         this.separator();
     }
 };
@@ -176,7 +142,7 @@ const Logger = {
  * Initialize DOM elements cache
  */
 function initializeElements() {
-    Logger.info('🔧 Initializing DOM elements...'); // Original: '🔧 Inicializuji DOM elementy...'
+    Logger.info('🔧 Initializing DOM elements...');
 
     elements.playPauseBtn = document.getElementById('playPauseBtn');
     elements.songTitle = document.getElementById('songTitle');
@@ -186,14 +152,14 @@ function initializeElements() {
     elements.shuffleBtn = document.getElementById('shuffleBtn');
 
     const foundElements = Object.values(elements).filter(el => el !== null).length;
-    Logger.success(`🎯 Found ${foundElements}/${Object.keys(elements).length} DOM elements`); // Original: '🎯 Nalezeno ${foundElements}/${Object.keys(elements).length} DOM elementů'
+    Logger.success(`🎯 Found ${foundElements}/${Object.keys(elements).length} DOM elements`);
 }
 
 /**
  * YouTube API ready callback
  */
 function onYouTubeIframeAPIReady() {
-    Logger.info('🔌 YouTube API is ready, creating player...'); // Original: '🔌 YouTube API je připravené, vytvářím přehrávač...'
+    Logger.info('🔌 YouTube API is ready, creating player...');
 
     playerState.player = new YT.Player('youtube-player', {
         height: '0',
@@ -216,7 +182,7 @@ function onYouTubeIframeAPIReady() {
         }
     });
 
-    Logger.success('🎮 YouTube player has been created'); // Original: '🎮 YouTube přehrávač byl vytvořen'
+    Logger.success('🎮 YouTube player has been created');
 }
 
 /**
@@ -224,7 +190,7 @@ function onYouTubeIframeAPIReady() {
  */
 function onPlayerReady(event) {
     playerState.isPlayerReady = true;
-    Logger.playerState('READY', `Default volume set to ${DEFAULT_VOLUME}%`); // Original: `Výchozí hlasitost nastavena na ${DEFAULT_VOLUME}%`
+    Logger.playerState('READY', `Default volume set to ${DEFAULT_VOLUME}%`);
     playerState.player.setVolume(DEFAULT_VOLUME);
     Logger.status();
 }
@@ -245,7 +211,7 @@ function onPlayerStateChange(event) {
 
     switch (event.data) {
         case YT.PlayerState.ENDED:
-            Logger.playerState('ENDED', 'Moving to the next track'); // Original: 'Přecházím na další skladbu'
+            Logger.playerState('ENDED', 'Moving to the next track');
             nextTrack();
             break;
         case YT.PlayerState.PLAYING:
@@ -257,7 +223,7 @@ function onPlayerStateChange(event) {
             updatePlayButton(false);
             break;
         case YT.PlayerState.BUFFERING:
-            Logger.playerState('LOADING', 'Loading video data...'); // Original: 'Načítám video data...'
+            Logger.playerState('LOADING', 'Loading video data...');
             break;
     }
 }
@@ -267,16 +233,16 @@ function onPlayerStateChange(event) {
  */
 function onPlayerError(event) {
     const errorMessages = {
-        2: 'Invalid video ID', // Original: 'Neplatné video ID'
-        5: 'HTML5 player cannot play the video', // Original: 'HTML5 přehrávač nedokáže přehrát video'
-        100: 'Video not found', // Original: 'Video nebylo nalezeno'
-        101: 'Video owner has forbidden playback in embedded player', // Original: 'Majitel videa zakázal přehrávání v embedded přehrávači'
-        150: 'Video owner has forbidden playback in embedded player' // Original: 'Majitel videa zakázal přehrávání v embedded přehrávači'
+        2: 'Invalid video ID',
+        5: 'HTML5 player cannot play the video',
+        100: 'Video not found',
+        101: 'Video owner has forbidden playback in embedded player',
+        150: 'Video owner has forbidden playback in embedded player'
     };
 
-    const errorMsg = errorMessages[event.data] || `Unknown error (${event.data})`; // Original: `Neznámá chyba (${event.data})`
-    Logger.error(`Youtubeer: ${errorMsg}`);
-    Logger.info('⏭️ Skipping to the next track...'); // Original: '⏭️ Přeskakuji na další skladbu...'
+    const errorMsg = errorMessages[event.data] || `Unknown error (${event.data})`;
+    Logger.error(`YouTube error: ${errorMsg}`);
+    Logger.info('⏭️ Skipping to the next track...');
     nextTrack();
 }
 
@@ -296,21 +262,21 @@ function updatePlayButton(isPlaying) {
  * Load YouTube API script
  */
 function loadYouTubeAPI() {
-    Logger.info('📡 Loading YouTube API...'); // Original: '📡 Načítám YouTube API...'
+    Logger.info('📡 Loading YouTube API...');
 
     const tag = document.createElement('script');
     tag.src = YOUTUBE_API_URL;
     const firstScriptTag = document.getElementsByTagName('script')[0];
     firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
-    Logger.success('✅ YouTube API script has been added to the page'); // Original: '✅ YouTube API script byl přidán do stránky'
+    Logger.success('✅ YouTube API script has been added to the page');
 }
 
 /**
  * Load playlist from YAML file
  */
 async function loadPlaylist() {
-    Logger.info(`📁 Loading playlist from file: ${PLAYLIST_FILE}`); // Original: `📁 Načítám playlist ze souboru: ${PLAYLIST_FILE}`
+    Logger.info(`📁 Loading playlist from file: ${PLAYLIST_FILE}`);
 
     try {
         const response = await fetch(PLAYLIST_FILE);
@@ -322,15 +288,15 @@ async function loadPlaylist() {
         const data = jsyaml.load(yamlText);
 
         if (!data?.playlist || !Array.isArray(data.playlist)) {
-            throw new Error('Invalid YAML format - playlist array not found'); // Original: 'Neplatný formát YAML - playlist array nebyl nalezen'
+            throw new Error('Invalid YAML format - playlist array not found');
         }
 
         playerState.playlist = data.playlist;
         initializeShuffleIndices();
 
-        Logger.playlist('Playlist loaded', playerState.playlist.length, { // Original: 'Playlist načten'
-            'First track': playerState.playlist[0]?.title || 'N/A', // Original: 'První skladba'
-            'Last track': playerState.playlist[playerState.playlist.length - 1]?.title || 'N/A' // Original: 'Poslední skladba'
+        Logger.playlist('Playlist loaded', playerState.playlist.length, {
+            'First track': playerState.playlist[0]?.title || 'N/A',
+            'Last track': playerState.playlist[playerState.playlist.length - 1]?.title || 'N/A'
         });
 
         if (playerState.playlist.length > 0) {
@@ -339,7 +305,7 @@ async function loadPlaylist() {
 
         Logger.status();
     } catch (error) {
-        Logger.error('Error loading playlist', error); // Original: 'Chyba při načítání playlistu'
+        Logger.error('Error loading playlist', error);
     }
 }
 
@@ -349,7 +315,7 @@ async function loadPlaylist() {
 function initializeShuffleIndices() {
     playerState.shuffledIndices = Array.from({ length: playerState.playlist.length }, (_, i) => i);
     playerState.shufflePosition = 0;
-    Logger.info('🔢 Initializing shuffle indices', playerState.shuffledIndices); // Original: '🔢 Inicializuji shuffle indexy'
+    Logger.info('🔢 Initializing shuffle indices', playerState.shuffledIndices);
 }
 
 /**
@@ -361,7 +327,7 @@ function shuffleIndices() {
         const j = Math.floor(Math.random() * (i + 1));
         [indices[i], indices[j]] = [indices[j], indices[i]];
     }
-    Logger.info('🎲 Playlist was shuffled using the Fisher-Yates algorithm'); // Original: '🎲 Playlist byl zamíchán pomocí Fisher-Yates algoritmu'
+    Logger.info('🎲 Playlist was shuffled using the Fisher-Yates algorithm');
 }
 
 /**
@@ -369,25 +335,25 @@ function shuffleIndices() {
  */
 function setupVolumeControl() {
     if (!elements.volumeSlider || !elements.volumeValue) {
-        Logger.warning('🔊 Volume controls were not found in DOM'); // Original: '🔊 Volume kontroly nebyly nalezeny v DOM'
+        Logger.warning('🔊 Volume controls were not found in DOM');
         return;
     }
 
-    Logger.info('🔊 Setting up volume control...'); // Original: '🔊 Nastavuji ovládání hlasitosti...'
+    Logger.info('🔊 Setting up volume control...');
 
     elements.volumeSlider.addEventListener('input', (event) => {
         const volume = parseInt(event.target.value);
-        elements.volumeValue.textContent = volume;
+        elements.volumeValue.textContent = volume + '%';
 
         if (playerState.isPlayerReady) {
             playerState.player.setVolume(volume);
-            Logger.info(`🔊 Volume changed to ${volume}%`); // Original: `🔊 Hlasitost změněna na ${volume}%`
+            Logger.info(`🔊 Volume changed to ${volume}%`);
         }
     });
 
     // Set initial volume display
-    elements.volumeValue.textContent = DEFAULT_VOLUME;
-    Logger.success('🔊 Volume control has been set up'); // Original: '🔊 Ovládání hlasitosti bylo nastaveno'
+    elements.volumeValue.textContent = DEFAULT_VOLUME + '%';
+    Logger.success('🔊 Volume control has been set up');
 }
 
 /**
@@ -395,7 +361,7 @@ function setupVolumeControl() {
  */
 function playTrack(index) {
     if (index < 0 || index >= playerState.playlist.length) {
-        Logger.error(`❌ Invalid track index: ${index}`); // Original: `❌ Neplatný index skladby: ${index}`
+        Logger.error(`❌ Invalid track index: ${index}`);
         return;
     }
 
@@ -415,14 +381,14 @@ function playTrack(index) {
         if (videoId) {
             playerState.player.loadVideoById(videoId);
             playerState.player.playVideo();
-            Logger.track('Playing track', currentTrack); // Original: 'Přehrávám skladbu'
+            Logger.track('Playing track', currentTrack);
         } else {
-            Logger.error('Invalid video ID', currentTrack.url); // Original: 'Neplatné video ID'
-            Logger.info('⏭️ Skipping to the next track...'); // Original: '⏭️ Přeskakuji na další skladbu...'
+            Logger.error('Invalid video ID', currentTrack.url);
+            Logger.info('⏭️ Skipping to the next track...');
             nextTrack();
         }
     } else {
-        Logger.warning('⏳ Player is not ready yet'); // Original: '⏳ Přehrávač ještě není připraven'
+        Logger.warning('⏳ Player is not ready yet');
     }
 }
 
@@ -432,7 +398,7 @@ function playTrack(index) {
 function updateTrackInfo() {
     const currentTrack = playerState.playlist[playerState.currentTrackIndex];
     if (!currentTrack) {
-        Logger.warning('❌ Current track not found'); // Original: '❌ Aktuální skladba nebyla nalezena'
+        Logger.warning('❌ Current track not found');
         return;
     }
 
@@ -443,7 +409,7 @@ function updateTrackInfo() {
         elements.channelName.textContent = currentTrack.channel;
     }
 
-    Logger.info(`🎵 Current track: ${currentTrack.title} - ${currentTrack.channel}`); // Original: `🎵 Aktuální skladba: ${currentTrack.title} - ${currentTrack.channel}`
+    Logger.info(`🎵 Current track: ${currentTrack.title} - ${currentTrack.channel}`);
 }
 
 /**
@@ -460,20 +426,20 @@ function extractVideoId(url) {
  */
 function togglePlayPause() {
     if (!playerState.isPlayerReady) {
-        Logger.warning('⏳ Player is not ready yet'); // Original: '⏳ Přehrávač ještě není připraven'
+        Logger.warning('⏳ Player is not ready yet');
         return;
     }
 
     if (playerState.isPlaying) {
-        Logger.info('⏸️ Pausing playback'); // Original: '⏸️ Pozastavuji přehrávání'
+        Logger.info('⏸️ Pausing playback');
         playerState.player.pauseVideo();
     } else {
         // If no video is loaded, start playing current track
         if (playerState.player.getPlayerState() === -1) {
-            Logger.info('▶️ Starting current track'); // Original: '▶️ Spouštím aktuální skladbu'
+            Logger.info('▶️ Starting current track');
             playTrack(playerState.currentTrackIndex);
         } else {
-            Logger.info('▶️ Resuming playback'); // Original: '▶️ Obnovuji přehrávání'
+            Logger.info('▶️ Resuming playback');
             playerState.player.playVideo();
         }
     }
@@ -484,7 +450,7 @@ function togglePlayPause() {
  */
 function nextTrack() {
     if (playerState.playlist.length === 0) {
-        Logger.warning('📭 Playlist is empty'); // Original: '📭 Playlist je prázdný'
+        Logger.warning('📭 Playlist is empty');
         return;
     }
 
@@ -494,7 +460,7 @@ function nextTrack() {
         // Re-shuffle when we complete a cycle
         if (playerState.shufflePosition === 0) {
             shuffleIndices();
-            Logger.info('🔄 One cycle completed - playlist was re-shuffled'); // Original: '🔄 Dokončen jeden cyklus - playlist byl znovu zamíchán'
+            Logger.info('🔄 One cycle completed - playlist was re-shuffled');
         }
 
         playerState.currentTrackIndex = playerState.shuffledIndices[playerState.shufflePosition];
@@ -502,7 +468,7 @@ function nextTrack() {
         playerState.currentTrackIndex = (playerState.currentTrackIndex + 1) % playerState.playlist.length;
     }
 
-    Logger.info(`⏭️ Moving to the next track (${playerState.currentTrackIndex + 1}/${playerState.playlist.length})`); // Original: `⏭️ Přecházím na další skladbu (${playerState.currentTrackIndex + 1}/${playerState.playlist.length})`
+    Logger.info(`⏭️ Moving to the next track (${playerState.currentTrackIndex + 1}/${playerState.playlist.length})`);
     playTrack(playerState.currentTrackIndex);
 }
 
@@ -511,7 +477,7 @@ function nextTrack() {
  */
 function previousTrack() {
     if (playerState.playlist.length === 0) {
-        Logger.warning('📭 Playlist is empty'); // Original: '📭 Playlist je prázdný'
+        Logger.warning('📭 Playlist is empty');
         return;
     }
 
@@ -526,7 +492,7 @@ function previousTrack() {
             : playerState.currentTrackIndex - 1;
     }
 
-    Logger.info(`⏮️ Moving to the previous track (${playerState.currentTrackIndex + 1}/${playerState.playlist.length})`); // Original: `⏮️ Přecházím na předchozí skladbu (${playerState.currentTrackIndex + 1}/${playerState.playlist.length})`
+    Logger.info(`⏮️ Moving to the previous track (${playerState.currentTrackIndex + 1}/${playerState.playlist.length})`);
     playTrack(playerState.currentTrackIndex);
 }
 
@@ -537,7 +503,7 @@ function toggleShuffle() {
     playerState.isShuffled = !playerState.isShuffled;
 
     if (!elements.shuffleBtn) {
-        Logger.warning('🔀 Shuffle button not found'); // Original: '🔀 Shuffle tlačítko nebylo nalezeno'
+        Logger.warning('🔀 Shuffle button not found');
         return;
     }
 
@@ -545,20 +511,124 @@ function toggleShuffle() {
         // Enable shuffle
         shuffleIndices();
         playerState.shufflePosition = playerState.shuffledIndices.indexOf(playerState.currentTrackIndex);
-
-        elements.shuffleBtn.textContent = '🔀 Shuffle ON';
-        elements.shuffleBtn.style.background = 'rgba(0, 255, 0, 0.3)';
-
+        elements.shuffleBtn.classList.add('active');
         Logger.shuffle(true, playerState.shuffledIndices);
     } else {
         // Disable shuffle
-        elements.shuffleBtn.textContent = '🔀 Shuffle';
-        elements.shuffleBtn.style.background = 'rgba(255, 255, 255, 0.2)';
-
+        elements.shuffleBtn.classList.remove('active');
         Logger.shuffle(false);
     }
 
     updateTrackInfo();
+}
+
+/**
+ * Setup keyboard shortcuts
+ */
+function setupKeyboardShortcuts() {
+    document.addEventListener('keydown', (event) => {
+        // Skip if user is typing in an input field
+        if (event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA') {
+            return;
+        }
+
+        switch (event.code) {
+            case 'Space':
+                event.preventDefault();
+                togglePlayPause();
+                break;
+            case 'ArrowRight':
+                event.preventDefault();
+                nextTrack();
+                break;
+            case 'ArrowLeft':
+                event.preventDefault();
+                previousTrack();
+                break;
+            case 'KeyS':
+                event.preventDefault();
+                toggleShuffle();
+                break;
+            case 'ArrowUp':
+                event.preventDefault();
+                if (elements.volumeSlider) {
+                    const currentVolume = parseInt(elements.volumeSlider.value);
+                    const newVolume = Math.min(100, currentVolume + 5);
+                    elements.volumeSlider.value = newVolume;
+                    elements.volumeSlider.dispatchEvent(new Event('input'));
+                }
+                break;
+            case 'ArrowDown':
+                event.preventDefault();
+                if (elements.volumeSlider) {
+                    const currentVolume = parseInt(elements.volumeSlider.value);
+                    const newVolume = Math.max(0, currentVolume - 5);
+                    elements.volumeSlider.value = newVolume;
+                    elements.volumeSlider.dispatchEvent(new Event('input'));
+                }
+                break;
+        }
+    });
+
+    Logger.success('⌨️ Keyboard shortcuts have been set up');
+    Logger.info('⌨️ Shortcuts: Space=Play/Pause, ←/→=Prev/Next, ↑/↓=Volume, S=Shuffle');
+}
+
+/**
+ * Setup media session API for background play and media controls
+ */
+function setupMediaSession() {
+    if (!('mediaSession' in navigator)) {
+        Logger.warning('📱 Media Session API is not supported');
+        return;
+    }
+
+    Logger.info('📱 Setting up Media Session API...');
+
+    // Set action handlers
+    navigator.mediaSession.setActionHandler('play', () => {
+        togglePlayPause();
+    });
+
+    navigator.mediaSession.setActionHandler('pause', () => {
+        togglePlayPause();
+    });
+
+    navigator.mediaSession.setActionHandler('previoustrack', () => {
+        previousTrack();
+    });
+
+    navigator.mediaSession.setActionHandler('nexttrack', () => {
+        nextTrack();
+    });
+
+    Logger.success('📱 Media Session API has been set up');
+}
+
+/**
+ * Update media session metadata
+ */
+function updateMediaSessionMetadata() {
+    if (!('mediaSession' in navigator)) return;
+
+    const currentTrack = playerState.playlist[playerState.currentTrackIndex];
+    if (!currentTrack) return;
+
+    navigator.mediaSession.metadata = new MediaMetadata({
+        title: currentTrack.title,
+        artist: currentTrack.channel,
+        album: 'Hardstyle Radio',
+        artwork: [
+            { src: 'https://via.placeholder.com/96x96?text=HR', sizes: '96x96', type: 'image/png' },
+            { src: 'https://via.placeholder.com/128x128?text=HR', sizes: '128x128', type: 'image/png' },
+            { src: 'https://via.placeholder.com/192x192?text=HR', sizes: '192x192', type: 'image/png' },
+            { src: 'https://via.placeholder.com/256x256?text=HR', sizes: '256x256', type: 'image/png' },
+            { src: 'https://via.placeholder.com/384x384?text=HR', sizes: '384x384', type: 'image/png' },
+            { src: 'https://via.placeholder.com/512x512?text=HR', sizes: '512x512', type: 'image/png' }
+        ]
+    });
+
+    Logger.info('📱 Media session metadata updated');
 }
 
 /**
@@ -567,15 +637,24 @@ function toggleShuffle() {
 function initializePlayer() {
     Logger.displayHeader();
 
-    Logger.info('🚀 Starting player initialization...'); // Original: '🚀 Spouštím inicializaci přehrávače...'
+    Logger.info('🚀 Starting player initialization...');
 
     initializeElements();
     loadYouTubeAPI();
     loadPlaylist();
     setupVolumeControl();
+    setupKeyboardShortcuts();
+    setupMediaSession();
 
-    Logger.success('✅ Initialization completed!'); // Original: '✅ Inicializace dokončena!'
+    Logger.success('✅ Initialization completed!');
 }
+
+// Override the updateTrackInfo function to also update media session
+const originalUpdateTrackInfo = updateTrackInfo;
+updateTrackInfo = function () {
+    originalUpdateTrackInfo();
+    updateMediaSessionMetadata();
+};
 
 // Initialize player when DOM is ready
 if (document.readyState === 'loading') {
